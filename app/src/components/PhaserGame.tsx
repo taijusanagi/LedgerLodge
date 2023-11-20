@@ -1,14 +1,6 @@
 import Phaser from "phaser";
 import { useEffect, useState } from "react";
 
-interface GameObject {
-  name: string;
-  scale: number;
-  x: number;
-  y: number;
-  sort: number;
-}
-
 const objects = {
   lamp: {
     name: "Lamp",
@@ -58,11 +50,7 @@ const PhaserGame = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
   const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
-  const [removedObjects, setRemovedObjects] = useState<Record<string, GameObject>>({});
-
-  useEffect(() => {
-    console.log(removedObjects);
-  }, [removedObjects]);
+  const [sprites, setSprites] = useState(new Map());
 
   useEffect(() => {
     const game = new Phaser.Game({
@@ -87,15 +75,16 @@ const PhaserGame = () => {
           newMusic.play();
           setIsMusicPlaying(true);
           this.add.image(540, 540, "Room estructure");
-
+          const newSprites = new Map();
           Object.entries(objects).forEach(([key, obj]) => {
             const sprite = this.add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
-
             sprite.on("pointerdown", () => {
               sprite.destroy();
-              setRemovedObjects((prev) => ({ ...prev, [key]: obj }));
+              newSprites.delete(key);
             });
+            newSprites.set(key, sprite);
           });
+          setSprites(newSprites);
         },
         update() {
           // Game update logic
@@ -103,7 +92,6 @@ const PhaserGame = () => {
       },
     });
     setGame(game);
-
     function resize() {
       const canvas = game.canvas,
         width = 500,
@@ -144,15 +132,22 @@ const PhaserGame = () => {
 
   const recoverObjects = () => {
     if (game) {
-      const sortedRemovedObjects = Object.entries(removedObjects).sort((a, b) => a[1].sort - b[1].sort);
-      sortedRemovedObjects.forEach(([key, obj]) => {
+      const newSprites = new Map();
+      sprites.forEach((sprite) => {
+        console.log;
+        if (sprite.active) {
+          sprite.destroy();
+        }
+      });
+      Object.entries(objects).forEach(([key, obj]) => {
         const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
         sprite.on("pointerdown", () => {
           sprite.destroy();
-          setRemovedObjects((prev) => ({ ...prev, [key]: obj }));
+          newSprites.delete(key);
         });
+        newSprites.set(key, sprite);
       });
-      setRemovedObjects({});
+      setSprites(newSprites);
     }
   };
 
