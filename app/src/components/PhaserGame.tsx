@@ -3,31 +3,51 @@ import React, { useEffect } from "react";
 
 const PhaserGame = () => {
   useEffect(() => {
-    const config = {
+    let game: Phaser.Game;
+
+    function resize() {
+      const canvas = game.canvas,
+        width = window.innerWidth,
+        height = window.innerHeight;
+      const wratio = width / height,
+        ratio = canvas.width / canvas.height;
+
+      if (wratio < ratio) {
+        canvas.style.width = width + "px";
+        canvas.style.height = width / ratio + "px";
+      } else {
+        canvas.style.width = height * ratio + "px";
+        canvas.style.height = height + "px";
+      }
+    }
+
+    game = new Phaser.Game({
       type: Phaser.AUTO,
       parent: "phaser-container",
-      width: 800,
-      height: 600,
+      width: 1080,
+      height: 1080,
       scene: {
-        preload: preload,
-        create: create,
-        update: update,
+        preload() {
+          this.load.image("roomStructure", "/images/Room estructure.png");
+          // Load other assets
+        },
+        create() {
+          this.add.image(540, 540, "roomStructure");
+          // Create other game objects
+        },
+        update() {
+          // Game update logic
+        },
       },
+    });
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      game.destroy(true);
     };
-
-    new Phaser.Game(config);
-
-    function preload() {
-      // Load assets
-    }
-
-    function create() {
-      // Create the game
-    }
-
-    function update() {
-      // Game loop
-    }
   }, []);
 
   return <div id="phaser-container"></div>;
