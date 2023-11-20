@@ -1,9 +1,35 @@
 import Phaser from "phaser";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const PhaserGame = () => {
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [game, setGame] = useState<Phaser.Game>();
+  const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
+
   useEffect(() => {
-    let game: Phaser.Game;
+    const game = new Phaser.Game({
+      type: Phaser.AUTO,
+      parent: "phaser-container",
+      width: 1080,
+      height: 1080,
+      scene: {
+        preload() {
+          this.load.audio("music", "sounds/Aldous Ichnite - Elevator to Nowhere.mp3");
+          this.load.image("roomStructure", "images/Room estructure.png");
+          // Load other assets
+        },
+        create() {
+          const newMusic = this.sound.add("music", { loop: true, volume: 0.5 });
+          setMusic(newMusic);
+          this.add.image(540, 540, "roomStructure");
+          // Create other game objects
+        },
+        update() {
+          // Game update logic
+        },
+      },
+    });
+    setGame(game);
 
     function resize() {
       const canvas = game.canvas,
@@ -21,36 +47,35 @@ const PhaserGame = () => {
       }
     }
 
-    game = new Phaser.Game({
-      type: Phaser.AUTO,
-      parent: "phaser-container",
-      width: 1080,
-      height: 1080,
-      scene: {
-        preload() {
-          this.load.image("roomStructure", "/images/Room estructure.png");
-          // Load other assets
-        },
-        create() {
-          this.add.image(540, 540, "roomStructure");
-          // Create other game objects
-        },
-        update() {
-          // Game update logic
-        },
-      },
-    });
-
     window.addEventListener("resize", resize);
     resize();
 
     return () => {
       window.removeEventListener("resize", resize);
       game.destroy(true);
+      if (music) {
+        music.destroy();
+      }
     };
   }, []);
 
-  return <div id="phaser-container"></div>;
+  const toggleMusic = () => {
+    if (music) {
+      if (isMusicPlaying) {
+        music.pause();
+      } else {
+        music.play();
+      }
+      setIsMusicPlaying(!isMusicPlaying);
+    }
+  };
+
+  return (
+    <div>
+      <div id="phaser-container"></div>
+      <button onClick={toggleMusic}>{isMusicPlaying ? "Pause Music" : "Play Music"}</button>
+    </div>
+  );
 };
 
 export default PhaserGame;
