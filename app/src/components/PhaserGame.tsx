@@ -1,6 +1,45 @@
 import Phaser from "phaser";
 import { useEffect, useState } from "react";
 
+const objects = {
+  lamp: {
+    name: "Lamp",
+    scale: 0.3,
+    x: 530,
+    y: 455,
+  },
+  desk: {
+    name: "Desk 1",
+    scale: 0.3,
+    x: 628,
+    y: 600,
+  },
+  chair: {
+    name: "Chair 1",
+    scale: 0.2,
+    x: 580,
+    y: 660,
+  },
+  closet: {
+    name: "Closet 1",
+    scale: 0.4,
+    x: 827,
+    y: 620,
+  },
+  mirror: {
+    name: "Mirror 1",
+    scale: 0.2,
+    x: 170,
+    y: 500,
+  },
+  bed: {
+    name: "Bed 1",
+    scale: 0.4,
+    x: 314,
+    y: 756,
+  },
+};
+
 const PhaserGame = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
@@ -14,15 +53,25 @@ const PhaserGame = () => {
       height: 1080,
       scene: {
         preload() {
-          this.load.audio("music", "sounds/Aldous Ichnite - Elevator to Nowhere.mp3");
-          this.load.image("roomStructure", "images/Room estructure.png");
-          // Load other assets
+          this.load.audio("Aldous Ichnite - Elevator to Nowhere", "sounds/Aldous Ichnite - Elevator to Nowhere.mp3");
+          this.load.image("Room estructure", "images/Room estructure.png");
+          this.load.image(objects.chair.name, `images/${objects.chair.name}.png`);
+          this.load.image(objects.desk.name, `images/${objects.desk.name}.png`);
+          this.load.image(objects.lamp.name, `images/${objects.lamp.name}.png`);
+          this.load.image(objects.closet.name, `images/${objects.closet.name}.png`);
+          this.load.image(objects.mirror.name, `images/${objects.mirror.name}.png`);
+          this.load.image(objects.bed.name, `images/${objects.bed.name}.png`);
         },
         create() {
-          const newMusic = this.sound.add("music", { loop: true, volume: 0.5 });
+          const newMusic = this.sound.add("Aldous Ichnite - Elevator to Nowhere", { loop: true, volume: 0.5 });
           setMusic(newMusic);
-          this.add.image(540, 540, "roomStructure");
-          // Create other game objects
+          this.add.image(540, 540, "Room estructure");
+          this.add.image(objects.lamp.x, objects.lamp.y, objects.lamp.name).scale = objects.lamp.scale;
+          this.add.image(objects.desk.x, objects.desk.y, objects.desk.name).scale = objects.desk.scale;
+          this.add.image(objects.chair.x, objects.chair.y, objects.chair.name).scale = objects.chair.scale;
+          this.add.image(objects.closet.x, objects.closet.y, objects.closet.name).scale = objects.closet.scale;
+          this.add.image(objects.mirror.x, objects.mirror.y, objects.mirror.name).scale = objects.mirror.scale;
+          this.add.image(objects.bed.x, objects.bed.y, objects.bed.name).scale = objects.bed.scale;
         },
         update() {
           // Game update logic
