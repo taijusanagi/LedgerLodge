@@ -1,42 +1,56 @@
 import Phaser from "phaser";
 import { useEffect, useState } from "react";
 
+interface GameObject {
+  name: string;
+  scale: number;
+  x: number;
+  y: number;
+  sort: number;
+}
+
 const objects = {
   lamp: {
     name: "Lamp",
     scale: 0.3,
     x: 530,
     y: 455,
+    sort: 0,
   },
   desk: {
     name: "Desk 1",
     scale: 0.3,
     x: 628,
     y: 600,
+    sort: 1,
   },
   chair: {
     name: "Chair 1",
     scale: 0.2,
     x: 580,
     y: 660,
+    sort: 3,
   },
   closet: {
     name: "Closet 1",
     scale: 0.4,
     x: 827,
     y: 620,
+    sort: 4,
   },
   mirror: {
     name: "Mirror 1",
     scale: 0.2,
     x: 170,
     y: 500,
+    sort: 5,
   },
   bed: {
     name: "Bed 1",
     scale: 0.4,
     x: 314,
     y: 756,
+    sort: 6,
   },
 };
 
@@ -44,6 +58,11 @@ const PhaserGame = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
   const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
+  const [removedObjects, setRemovedObjects] = useState<Record<string, GameObject>>({});
+
+  useEffect(() => {
+    console.log(removedObjects);
+  }, [removedObjects]);
 
   useEffect(() => {
     const game = new Phaser.Game({
@@ -65,13 +84,18 @@ const PhaserGame = () => {
         create() {
           const newMusic = this.sound.add("Aldous Ichnite - Elevator to Nowhere", { loop: true, volume: 0.5 });
           setMusic(newMusic);
+          newMusic.play();
+          setIsMusicPlaying(true);
           this.add.image(540, 540, "Room estructure");
-          this.add.image(objects.lamp.x, objects.lamp.y, objects.lamp.name).scale = objects.lamp.scale;
-          this.add.image(objects.desk.x, objects.desk.y, objects.desk.name).scale = objects.desk.scale;
-          this.add.image(objects.chair.x, objects.chair.y, objects.chair.name).scale = objects.chair.scale;
-          this.add.image(objects.closet.x, objects.closet.y, objects.closet.name).scale = objects.closet.scale;
-          this.add.image(objects.mirror.x, objects.mirror.y, objects.mirror.name).scale = objects.mirror.scale;
-          this.add.image(objects.bed.x, objects.bed.y, objects.bed.name).scale = objects.bed.scale;
+
+          Object.entries(objects).forEach(([key, obj]) => {
+            const sprite = this.add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
+
+            sprite.on("pointerdown", () => {
+              sprite.destroy();
+              setRemovedObjects((prev) => ({ ...prev, [key]: obj }));
+            });
+          });
         },
         update() {
           // Game update logic
@@ -82,11 +106,10 @@ const PhaserGame = () => {
 
     function resize() {
       const canvas = game.canvas,
-        width = window.innerWidth,
-        height = window.innerHeight;
+        width = 500,
+        height = 500;
       const wratio = width / height,
         ratio = canvas.width / canvas.height;
-
       if (wratio < ratio) {
         canvas.style.width = width + "px";
         canvas.style.height = width / ratio + "px";
@@ -119,10 +142,25 @@ const PhaserGame = () => {
     }
   };
 
+  const recoverObjects = () => {
+    if (game) {
+      const sortedRemovedObjects = Object.entries(removedObjects).sort((a, b) => a[1].sort - b[1].sort);
+      sortedRemovedObjects.forEach(([key, obj]) => {
+        const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
+        sprite.on("pointerdown", () => {
+          sprite.destroy();
+          setRemovedObjects((prev) => ({ ...prev, [key]: obj }));
+        });
+      });
+      setRemovedObjects({});
+    }
+  };
+
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center h-screen">
       <div id="phaser-container"></div>
       <button onClick={toggleMusic}>{isMusicPlaying ? "Pause Music" : "Play Music"}</button>
+      <button onClick={recoverObjects}>Recover Furniture</button>
     </div>
   );
 };
