@@ -11,12 +11,13 @@ export const inter = Inter({ subsets: ["latin"] });
 
 import { Web5, Record } from "@web5/api";
 import { Lodge, VerifiableCredential } from "@/types";
+import { truncateString } from "@/lib/utils";
 
 export default function Home() {
   const [credentials, setCredentials] = useState<VerifiableCredential[]>([]);
   const [lodge, setLodge] = useState<Lodge>({});
-  const [did, setDid] = useState("");
   const [web5, setWeb5] = useState<Web5>();
+  const [did, setDid] = useState("");
   const [privateRecordId, setPrivateRecordId] = useState("");
 
   const initWeb5 = async () => {
@@ -69,9 +70,17 @@ export default function Home() {
       <div className="flex justify-center mb-8">
         <div id="formSection" className="w-full max-w-md">
           <h2 className="text-lg font-bold mb-4 text-gray-800 text-center">Identity Wallet</h2>
-          <div className="centered-form bg-white p-4 rounded-lg shadow-md space-y-4">
+          <div className="centered-form bg-white p-4 rounded-lg shadow-md space-y-8">
             <div>
-              <label className="text-sm form-label block text-gray-700 font-bold mb-2">Available Credentials</label>
+              <label className="text-sm block text-gray-700 mb-2">DID</label>{" "}
+              <p className="text-xs text-gray-70 text-gray-500">{truncateString(did, 30)}</p>
+            </div>
+            <div>
+              <label className="text-sm block text-gray-700 mb-2">Credentials Record ID</label>
+              <p className="text-xs text-gray-70 text-gray-500">{truncateString(privateRecordId, 30)}</p>
+            </div>
+            <div>
+              <label className="text-sm block text-gray-700 mb-2">Available Credentials</label>
               <div className="space-y-2">
                 {credentials.map((credential, i) => {
                   return (
