@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import { useEffect, useState } from "react";
 
+import { Lodge } from "@/types";
+
 const objects = {
   lamp: {
     name: "Lamp",
@@ -46,11 +48,22 @@ const objects = {
   },
 };
 
-const Game = () => {
+interface GameProps {
+  lodge: Lodge;
+}
+
+const Game: React.FC<GameProps> = ({ lodge }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
   const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
-  const [sprites, setSprites] = useState(new Map());
+  // const [sprites, setSprites] = useState(new Map());
+
+  useEffect(() => {
+    if (!game) {
+      return;
+    }
+    console.log("Game.lodge", lodge);
+  }, [game, lodge]);
 
   useEffect(() => {
     const game = new Phaser.Game({
@@ -75,16 +88,16 @@ const Game = () => {
           // newMusic.play();
           // setIsMusicPlaying(true);
           this.add.image(540, 540, "Room estructure");
-          const newSprites = new Map();
-          Object.entries(objects).forEach(([key, obj]) => {
-            const sprite = this.add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
-            sprite.on("pointerdown", () => {
-              sprite.destroy();
-              newSprites.delete(key);
-            });
-            newSprites.set(key, sprite);
-          });
-          setSprites(newSprites);
+          // const newSprites = new Map();
+          // Object.entries(objects).forEach(([key, obj]) => {
+          //   const sprite = this.add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
+          //   sprite.on("pointerdown", () => {
+          //     sprite.destroy();
+          //     newSprites.delete(key);
+          //   });
+          //   newSprites.set(key, sprite);
+          // });
+          // setSprites(newSprites);
         },
         update() {
           // Game update logic
@@ -119,37 +132,37 @@ const Game = () => {
     };
   }, []);
 
-  const toggleMusic = () => {
-    if (music) {
-      if (isMusicPlaying) {
-        music.pause();
-      } else {
-        music.play();
-      }
-      setIsMusicPlaying(!isMusicPlaying);
-    }
-  };
+  // const toggleMusic = () => {
+  //   if (music) {
+  //     if (isMusicPlaying) {
+  //       music.pause();
+  //     } else {
+  //       music.play();
+  //     }
+  //     setIsMusicPlaying(!isMusicPlaying);
+  //   }
+  // };
 
-  const recoverObjects = () => {
-    if (game) {
-      const newSprites = new Map();
-      sprites.forEach((sprite) => {
-        console.log;
-        if (sprite.active) {
-          sprite.destroy();
-        }
-      });
-      Object.entries(objects).forEach(([key, obj]) => {
-        const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
-        sprite.on("pointerdown", () => {
-          sprite.destroy();
-          newSprites.delete(key);
-        });
-        newSprites.set(key, sprite);
-      });
-      setSprites(newSprites);
-    }
-  };
+  // const recoverObjects = () => {
+  //   if (game) {
+  //     const newSprites = new Map();
+  //     sprites.forEach((sprite) => {
+  //       console.log;
+  //       if (sprite.active) {
+  //         sprite.destroy();
+  //       }
+  //     });
+  //     Object.entries(objects).forEach(([key, obj]) => {
+  //       const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
+  //       sprite.on("pointerdown", () => {
+  //         sprite.destroy();
+  //         newSprites.delete(key);
+  //       });
+  //       newSprites.set(key, sprite);
+  //     });
+  //     setSprites(newSprites);
+  //   }
+  // };
 
   return (
     <div className="flex flex-col justify-center items-center">
