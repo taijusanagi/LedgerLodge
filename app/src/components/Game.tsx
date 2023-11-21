@@ -46,7 +46,7 @@ const objects = {
   },
 };
 
-const PhaserGame = () => {
+const Game = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
   const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
@@ -72,8 +72,8 @@ const PhaserGame = () => {
         create() {
           const newMusic = this.sound.add("Aldous Ichnite - Elevator to Nowhere", { loop: true, volume: 0.5 });
           setMusic(newMusic);
-          newMusic.play();
-          setIsMusicPlaying(true);
+          // newMusic.play();
+          // setIsMusicPlaying(true);
           this.add.image(540, 540, "Room estructure");
           const newSprites = new Map();
           Object.entries(objects).forEach(([key, obj]) => {
@@ -94,8 +94,8 @@ const PhaserGame = () => {
     setGame(game);
     function resize() {
       const canvas = game.canvas,
-        width = 500,
-        height = 500;
+        width = 350,
+        height = 350;
       const wratio = width / height,
         ratio = canvas.width / canvas.height;
       if (wratio < ratio) {
@@ -152,12 +152,12 @@ const PhaserGame = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-center">
       <div id="phaser-container"></div>
-      <button onClick={toggleMusic}>{isMusicPlaying ? "Pause Music" : "Play Music"}</button>
-      <button onClick={recoverObjects}>Recover Furniture</button>
+      {/* <button onClick={toggleMusic}>{isMusicPlaying ? "Pause Music" : "Play Music"}</button>
+      <button onClick={recoverObjects}>Recover Furniture</button> */}
     </div>
   );
 };
 
-export default PhaserGame;
+export default Game;
