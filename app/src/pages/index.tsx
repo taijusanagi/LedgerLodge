@@ -13,6 +13,8 @@ import { Web5, Record } from "@web5/api";
 import { Lodge, VerifiableCredential } from "@/types";
 import { truncateString } from "@/lib/utils";
 
+import { FaRegCopy } from "react-icons/fa";
+
 import protocol from "../../public/protocol.json";
 
 const verifiableCredentialTemplate = {
@@ -32,6 +34,12 @@ export default function Home() {
   const [web5, setWeb5] = useState<Web5>();
   const [did, setDid] = useState("");
   const [privateRecordId, setPrivateRecordId] = useState("");
+  const [lodgeRecoredId, setLodgeRecordId] = useState("");
+
+  const [isCredentialModalOpen, setCredentialModalOpen] = useState(false);
+  const [isShareModalOpen, setShareModalOpen] = useState(false);
+  const [selecrtedCredentialIndex, setSelectedCredentialIndex] = useState(0);
+  const [recipientDid, setRecipientDid] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -106,7 +114,15 @@ export default function Home() {
         <div id="formSection" className="w-full max-w-md">
           <div className="centered-form bg-white p-4 rounded-lg shadow-md space-y-8">
             <div>
-              <label className="text-sm block text-gray-700 mb-2">Owner DID</label>{" "}
+              <div className="flex justify-between">
+                <label className="text-sm block text-gray-700 mb-2">Owner DID</label>
+                <FaRegCopy
+                  className="cursor-pointer text-sm text-gray-700"
+                  onClick={() => {
+                    navigator.clipboard.writeText(did);
+                  }}
+                />
+              </div>
               <p className="text-xs text-gray-70 text-gray-500">{truncateString(did, 30)}</p>
             </div>
             <div>
@@ -123,6 +139,8 @@ export default function Home() {
                       className="relative h-52 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded-lg shadow-lg cursor-pointer"
                       onClick={() => {
                         console.log("Click Sample Credential");
+                        setSelectedCredentialIndex(i);
+                        setCredentialModalOpen(true);
                       }}
                     >
                       <div className="absolute bottom-2 right-2">Sample Credential</div>
@@ -168,38 +186,95 @@ export default function Home() {
                 >
                   Get Sample Credential
                 </button>
-                <button
-                  className="bg-cyan-500 disabled:opacity-50 text-xs text-white py-2 px-4 rounded-lg hover:enabled:bg-cyan-600 w-full"
-                  onClick={async () => {
-                    if (!web5) {
-                      return;
-                    }
-                    const recipientDid =
-                      "did:ion:EiAgEI3XNyBtfKM38-6dVeXDD-TAVCZwRQfg19u5NLTVDg:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJkd24tc2lnIiwicHVibGljS2V5SndrIjp7ImNydiI6IkVkMjU1MTkiLCJrdHkiOiJPS1AiLCJ4IjoiMlQ0LUJybmJaMnNjZWw4ZWxLcHN4NnZVSEZlcDM1RXNlSWpTWC1DSW5YWSJ9LCJwdXJwb3NlcyI6WyJhdXRoZW50aWNhdGlvbiJdLCJ0eXBlIjoiSnNvbldlYktleTIwMjAifSx7ImlkIjoiZHduLWVuYyIsInB1YmxpY0tleUp3ayI6eyJjcnYiOiJzZWNwMjU2azEiLCJrdHkiOiJFQyIsIngiOiJrSUdtNnYwX2RHMmpYQTdJYTc2WHNYOGUtU0xWQ3loUnZiQ3p3TWRfRlZRIiwieSI6IklzeHJJQmV6cUs4SkpiODE5VVNPdEo5SEZMdkFUQkNLS1BMMVRJSnNNWVEifSwicHVycG9zZXMiOlsia2V5QWdyZWVtZW50Il0sInR5cGUiOiJKc29uV2ViS2V5MjAyMCJ9XSwic2VydmljZXMiOlt7ImlkIjoiZHduIiwic2VydmljZUVuZHBvaW50Ijp7ImVuY3J5cHRpb25LZXlzIjpbIiNkd24tZW5jIl0sIm5vZGVzIjpbImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNSIsImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduMCJdLCJzaWduaW5nS2V5cyI6WyIjZHduLXNpZyJdfSwidHlwZSI6IkRlY2VudHJhbGl6ZWRXZWJOb2RlIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlBb0M0M3kyX2JnclhZSi1EY2tKejlPbkVPVnN3MzBJSkkzTHRPV2hyYmZqdyJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpQ0RIZkwyVlduYUVDVC1fSTBzb196dXZIX0hIb3h6di1vX09adkZRLWZtUFEiLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUNJTHA3Yy1xWkhZbDBGN3VSNEJjSTNSX0RmMUgxeHk4S0hXb2hsR3NDdHZ3In19";
-                    // web5.dwn.protocols.
-                    const { record } = await web5.dwn.records.write({
-                      data: { creator: did },
-                      store: true,
-                      message: {
-                        protocol: protocol.protocol,
-                        protocolPath: "doc",
-                        schema: "doc",
-                        recipient: recipientDid,
-                        published: true,
-                      },
-                    });
-                    const sendResponse = await record?.send(recipientDid);
-                    console.log("sendResponse", sendResponse);
-                    console.log("record.id", record!.id);
-                  }}
-                >
-                  Share My Credential Lodge
-                </button>
               </div>
+            </div>
+            <div>
+              <label className="text-sm block text-gray-700 mb-2">Share Credentials Lodge</label>
+              <input
+                type="text"
+                value={recipientDid}
+                onChange={(e) => setRecipientDid(e.target.value)}
+                className="py-3 px-2 mb-4 w-full border rounded-lg text-xs text-gray-500"
+                placeholder="Recipient Did"
+              />
+              <button
+                className="bg-cyan-500 disabled:opacity-50 text-xs text-white py-2 px-4 rounded-lg hover:enabled:bg-cyan-600 w-full"
+                onClick={async () => {
+                  if (!web5 || !recipientDid) {
+                    return;
+                  }
+                  const { record } = await web5.dwn.records.write({
+                    data: { creator: did },
+                    store: true,
+                    message: {
+                      protocol: protocol.protocol,
+                      protocolPath: "doc",
+                      schema: "doc",
+                      recipient: recipientDid,
+                      published: true,
+                    },
+                  });
+                  const sendResponse = await record?.send(recipientDid);
+                  console.log("sendResponse", sendResponse);
+                  console.log("record.id", record!.id);
+                  setLodgeRecordId(record!.id);
+                  setShareModalOpen(true);
+                }}
+              >
+                Share My Credential Lodge
+              </button>
             </div>
           </div>
         </div>
       </div>
+      {isCredentialModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2">
+          <div className="absolute inset-0 bg-black opacity-50" onClick={() => setCredentialModalOpen(false)}></div>
+          <div className="relative z-10 bg-white py-4 px-6 rounded-xl shadow-lg max-w-xl w-full mx-4">
+            <header className="flex justify-between items-center mb-2">
+              <h2 className="text-sm font-bold text-gray-700">Credential Preview</h2>
+              <button
+                onClick={() => setCredentialModalOpen(false)}
+                className="text-2xl text-gray-400 hover:text-gray-500"
+              >
+                &times;
+              </button>
+            </header>
+            <pre
+              className="p-2 rounded border border-gray-200 bg-gray-50 overflow-x-auto overflow-y-auto max-h-80 mb-4"
+              style={{ fontSize: "10px" }}
+            >
+              {JSON.stringify(credentials[selecrtedCredentialIndex], null, "\t")}
+            </pre>
+            <button
+              className="bg-cyan-500 disabled:opacity-50 text-white py-2 px-4 rounded-lg hover:enabled:bg-cyan-600 w-full mb-4"
+              onClick={async () => {}}
+            >
+              Send Tx
+            </button>
+          </div>
+        </div>
+      )}
+      {isShareModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2">
+          <div className="absolute inset-0 bg-black opacity-50" onClick={() => setShareModalOpen(false)}></div>
+          <div className="relative z-10 bg-white py-4 px-6 rounded-xl shadow-lg max-w-xl w-full mx-4">
+            <header className="flex justify-between items-center mb-2">
+              <h2 className="text-sm font-bold text-gray-700">Share Preview</h2>
+              <button onClick={() => setShareModalOpen(false)} className="text-2xl text-gray-400 hover:text-gray-500">
+                &times;
+              </button>
+            </header>
+            {lodgeRecoredId}
+            <button
+              className="bg-cyan-500 disabled:opacity-50 text-white py-2 px-4 rounded-lg hover:enabled:bg-cyan-600 w-full mb-4"
+              onClick={async () => {}}
+            >
+              Share
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
