@@ -135,6 +135,15 @@ export default function Home() {
               <label className="text-sm block text-gray-700 mb-2">Available Credentials</label>
               <div className="space-y-2">
                 {credentials.map((credential, i) => {
+                  const _objects = objects as any;
+                  let matchIndex = -1;
+                  const lodgeValues = Object.values(lodge);
+                  for (let j = 0; j < lodgeValues.length; j++) {
+                    if (JSON.stringify(lodgeValues[j]) === JSON.stringify(credential)) {
+                      matchIndex = j;
+                      break;
+                    }
+                  }
                   return (
                     <div
                       key={i}
@@ -145,6 +154,15 @@ export default function Home() {
                         setCredentialModalOpen(true);
                       }}
                     >
+                      {matchIndex >= 0 && (
+                        <div className="absolute top-2 left-2">
+                          <img
+                            src={`/images/${_objects[Object.keys(lodge)[matchIndex]].name}.png`}
+                            alt="object"
+                            className="mb-2 w-12 h-12 mx-auto"
+                          />
+                        </div>
+                      )}
                       <div className="absolute bottom-2 right-2">Sample Credential</div>
                     </div>
                   );
@@ -161,11 +179,11 @@ export default function Home() {
                       },
                       {
                         ...verifiableCredentialTemplate,
-                        credentialSubject: { id: did, name: "Sample Credential 1" },
+                        credentialSubject: { id: did, name: "Sample Credential 2" },
                       },
                       {
                         ...verifiableCredentialTemplate,
-                        credentialSubject: { id: did, name: "Sample Credential 1" },
+                        credentialSubject: { id: did, name: "Sample Credential 3" },
                       },
                     ];
                     setCredentials(credentials);
@@ -257,6 +275,17 @@ export default function Home() {
                   onClick={() => {
                     console.log(k);
                     setLodge((prev) => {
+                      let matchIndex = -1;
+                      const lodgeValues = Object.values(lodge);
+                      for (let j = 0; j < lodgeValues.length; j++) {
+                        if (JSON.stringify(lodgeValues[j]) === JSON.stringify(credentials[selecrtedCredentialIndex])) {
+                          matchIndex = j;
+                          break;
+                        }
+                      }
+                      if (matchIndex >= 0) {
+                        delete prev[Object.keys(lodge)[matchIndex]];
+                      }
                       return { ...prev, [k]: credentials[selecrtedCredentialIndex] };
                     });
                     setCredentialModalOpen(false);
