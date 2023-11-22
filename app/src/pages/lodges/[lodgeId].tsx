@@ -35,7 +35,7 @@ export default function Home() {
       setLodgeRecordId(lodgeRecordId);
       const { records } = await web5.dwn.records.query({
         // from: "did:ion:EiBJrO9QsurK9uVw0JBwwOrLZhS9eYFUv2KstIdjpXsDmA:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJkd24tc2lnIiwicHVibGljS2V5SndrIjp7ImNydiI6IkVkMjU1MTkiLCJrdHkiOiJPS1AiLCJ4IjoiaHNyVGttVVoza2N1bmhocXpZZTlaUWJTUGg3ZzNJRFNoc0ZwR0NXaVJzYyJ9LCJwdXJwb3NlcyI6WyJhdXRoZW50aWNhdGlvbiJdLCJ0eXBlIjoiSnNvbldlYktleTIwMjAifSx7ImlkIjoiZHduLWVuYyIsInB1YmxpY0tleUp3ayI6eyJjcnYiOiJzZWNwMjU2azEiLCJrdHkiOiJFQyIsIngiOiI4MU5yc0E1UW1wajkzMngtdjduU20yS1BTWTJtWFhXOG5FRnotZEZOaXhRIiwieSI6ImNJQm50ZHBFLXBRSnlLVEhNNS0zZUVRODZTTDczTXIxOG5HbmtTa3N6d2sifSwicHVycG9zZXMiOlsia2V5QWdyZWVtZW50Il0sInR5cGUiOiJKc29uV2ViS2V5MjAyMCJ9XSwic2VydmljZXMiOlt7ImlkIjoiZHduIiwic2VydmljZUVuZHBvaW50Ijp7ImVuY3J5cHRpb25LZXlzIjpbIiNkd24tZW5jIl0sIm5vZGVzIjpbImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduMiIsImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduMSJdLCJzaWduaW5nS2V5cyI6WyIjZHduLXNpZyJdfSwidHlwZSI6IkRlY2VudHJhbGl6ZWRXZWJOb2RlIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlCcFN4azNPTXBkTVkxLVdqanV0QUFfNUlUY0JFY24za2RwR1JnR0NEczlXQSJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpQk51dnN0RzFwMVF5LXNUckdfM0N1RHNTYTFPWS03NzFYVjJiWE1weUt1LUEiLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaURjSzEwUVNIcU1mYWt3R3NHSnNsajBDSEpPSWljREJ1TEU5OERiUG85NUx3In19",
-        // from: did,
+        from: did,
         message: {
           filter: {
             // protocol: "http://localhost:3000",
