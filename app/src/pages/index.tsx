@@ -28,6 +28,8 @@ const verifiableCredentialTemplate = {
   proof: {},
 };
 
+import { objects } from "@/lib/objects";
+
 export default function Home() {
   const [credentials, setCredentials] = useState<VerifiableCredential[]>([]);
   const [lodge, setLodge] = useState<Lodge>({});
@@ -232,7 +234,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-black opacity-50" onClick={() => setCredentialModalOpen(false)}></div>
           <div className="relative z-10 bg-white py-4 px-6 rounded-xl shadow-lg max-w-xl w-full mx-4">
             <header className="flex justify-between items-center mb-2">
-              <h2 className="text-sm font-bold text-gray-700">Credential Preview</h2>
+              <h2 className="text-sm font-bold text-gray-700">Credential</h2>
               <button
                 onClick={() => setCredentialModalOpen(false)}
                 className="text-2xl text-gray-400 hover:text-gray-500"
@@ -246,12 +248,18 @@ export default function Home() {
             >
               {JSON.stringify(credentials[selecrtedCredentialIndex], null, "\t")}
             </pre>
-            <button
-              className="bg-cyan-500 disabled:opacity-50 text-white py-2 px-4 rounded-lg hover:enabled:bg-cyan-600 w-full mb-4"
-              onClick={async () => {}}
-            >
-              Send Tx
-            </button>
+            <label className="text-sm block text-gray-700 mb-4">Select Lodge Furniture</label>
+            <div className="grid grid-cols-6 gap-4">
+              {Object.values(objects).map((v, i) => (
+                <div key={i} className="overflow-hidden rounded-lg" onClick={() => setCredentialModalOpen(false)}>
+                  <img
+                    src={`/images/${v.name}.png`}
+                    alt={`image-${i}`}
+                    className="w-full h-auto object-cover cursor-pointer"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
