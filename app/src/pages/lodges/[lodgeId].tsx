@@ -20,6 +20,7 @@ export default function Home() {
   const [web5, setWeb5] = useState<Web5>();
   const [did, setDid] = useState("");
   const [lodgeRecordId, setLodgeRecordId] = useState("");
+  const [dataCreated, setDataCreated] = useState("");
 
   const [selectedCredential, setSelectedCredential] = useState<any>();
   const router = useRouter();
@@ -53,8 +54,10 @@ export default function Home() {
       // if (!record) {
       //   return;
       // }
-      setDid(record.author);
-      console.log(await record.data.json());
+      setDataCreated(record.dateCreated);
+      const data = await record.data.json();
+      setDid(data.creator);
+      setLodge(data.lodge);
     })();
   }, [router]);
 
@@ -65,7 +68,7 @@ export default function Home() {
       <header className={`w-full bg-gray-800 text-white p-4 mb-8`}>LedgerLodge</header>
       <div className="mb-8">
         <h2 className="text-lg font-bold mb-4 text-gray-800 text-center">Verifiable Credentials Lodge</h2>
-        <Game lodge={lodge} setLodge={setLodge} mode="view" />
+        <Game lodge={lodge} setLodge={setLodge} mode="view" setSelectedCredential={setSelectedCredential} />
       </div>
       <div className="flex justify-center mb-8">
         <div id="formSection" className="w-full max-w-md">
@@ -77,6 +80,10 @@ export default function Home() {
             <div>
               <label className="text-sm block text-gray-700 mb-2">Lodge Record ID</label>
               <p className="text-xs text-gray-70 text-gray-500">{truncateString(lodgeRecordId, 30)}</p>
+            </div>
+            <div>
+              <label className="text-sm block text-gray-700 mb-2">Data Created</label>
+              <p className="text-xs text-gray-70 text-gray-500">{dataCreated}</p>
             </div>
           </div>
         </div>

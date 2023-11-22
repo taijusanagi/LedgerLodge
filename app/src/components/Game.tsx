@@ -14,14 +14,16 @@ interface GameProps {
 const Game: React.FC<GameProps> = ({ mode, lodge, setLodge, setSelectedCredential }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
+  const [clickSound, setClickSound] = useState<Phaser.Sound.BaseSound>();
   const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
   const [sprites, setSprites] = useState(new Map());
 
   useEffect(() => {
-    if (!game) {
+    if (!game || !clickSound) {
       return;
     }
     console.log("Game.lodge", lodge);
+    let setSound = false;
     const _objects = objects as any;
     const newSprites = new Map();
     sprites.forEach((sprite) => {
@@ -32,10 +34,14 @@ const Game: React.FC<GameProps> = ({ mode, lodge, setLodge, setSelectedCredentia
     Object.entries(lodge)
       .sort(([k1], [k2]) => _objects[k1].sort - _objects[k2].sort)
       .map(([k, v], i) => {
+        setSound = true;
         const obj = _objects[k];
         const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
         if (mode == "edit") {
           sprite.on("pointerdown", () => {
+            if (clickSound) {
+              clickSound.play();
+            }
             sprite.destroy();
             setLodge((prev: any) => {
               delete prev[k];
@@ -44,11 +50,19 @@ const Game: React.FC<GameProps> = ({ mode, lodge, setLodge, setSelectedCredentia
           });
           newSprites.set(k, sprite);
         } else {
-          setSelectedCredential(v);
+          sprite.on("pointerdown", () => {
+            if (clickSound) {
+              clickSound.play();
+            }
+            setSelectedCredential(v);
+          });
         }
       });
     setSprites(newSprites);
-  }, [mode, game, lodge, setLodge]);
+    if (setSound && clickSound) {
+      clickSound.play();
+    }
+  }, [mode, game, lodge, setLodge, clickSound, setSelectedCredential]);
 
   useEffect(() => {
     const game = new Phaser.Game({
@@ -59,6 +73,7 @@ const Game: React.FC<GameProps> = ({ mode, lodge, setLodge, setSelectedCredentia
       scene: {
         preload() {
           this.load.audio("Aldous Ichnite - Elevator to Nowhere", "/sounds/Aldous Ichnite - Elevator to Nowhere.mp3");
+          this.load.audio("Click", "/sounds/Click.mp3");
           this.load.image("Room estructure", "/images/Room estructure.png");
           this.load.image(objects.chair.name, `/images/${objects.chair.name}.png`);
           this.load.image(objects.desk.name, `/images/${objects.desk.name}.png`);
@@ -71,6 +86,8 @@ const Game: React.FC<GameProps> = ({ mode, lodge, setLodge, setSelectedCredentia
           const newMusic = this.sound.add("Aldous Ichnite - Elevator to Nowhere", { loop: true, volume: 0.5 });
           setMusic(newMusic);
           newMusic.play();
+          const clickSound = this.sound.add("Click", { volume: 0.5 });
+          setClickSound(clickSound);
           setIsMusicPlaying(true);
           this.add.image(540, 540, "Room estructure");
           // const newSprites = new Map();

@@ -133,7 +133,7 @@ export default function Home() {
             </div>
             <div>
               <label className="text-sm block text-gray-700 mb-2">Available Credentials</label>
-              <div className="space-y-2">
+              <div className="space-y-4">
                 {credentials.map((credential, i) => {
                   const _objects = objects as any;
                   let matchIndex = -1;
@@ -147,7 +147,7 @@ export default function Home() {
                   return (
                     <div
                       key={i}
-                      className="relative h-52 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded-lg shadow-lg cursor-pointer"
+                      className="relative h-32 w-full max-w-xs bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded-lg shadow-lg cursor-pointer"
                       onClick={() => {
                         console.log("Click Sample Credential");
                         setSelectedCredentialIndex(i);
@@ -163,7 +163,7 @@ export default function Home() {
                           />
                         </div>
                       )}
-                      <div className="absolute bottom-2 right-2">Sample Credential</div>
+                      <div className="absolute bottom-2 right-4 text-xs">Sample Credential {i + 1}</div>
                     </div>
                   );
                 })}
@@ -184,6 +184,18 @@ export default function Home() {
                       {
                         ...verifiableCredentialTemplate,
                         credentialSubject: { id: did, name: "Sample Credential 3" },
+                      },
+                      {
+                        ...verifiableCredentialTemplate,
+                        credentialSubject: { id: did, name: "Sample Credential 4" },
+                      },
+                      {
+                        ...verifiableCredentialTemplate,
+                        credentialSubject: { id: did, name: "Sample Credential 5" },
+                      },
+                      {
+                        ...verifiableCredentialTemplate,
+                        credentialSubject: { id: did, name: "Sample Credential 6" },
                       },
                     ];
                     setCredentials(credentials);
@@ -224,7 +236,7 @@ export default function Home() {
                     return;
                   }
                   const { record } = await web5.dwn.records.write({
-                    data: { creator: did },
+                    data: { creator: did, lodge },
                     store: true,
                     message: {
                       protocol: protocol.protocol,
@@ -307,18 +319,15 @@ export default function Home() {
           <div className="absolute inset-0 bg-black opacity-50" onClick={() => setShareModalOpen(false)}></div>
           <div className="relative z-10 bg-white py-4 px-6 rounded-xl shadow-lg max-w-xl w-full mx-4">
             <header className="flex justify-between items-center mb-2">
-              <h2 className="text-sm font-bold text-gray-700">Share Preview</h2>
+              <h2 className="text-sm font-bold text-gray-700">Share URL</h2>
               <button onClick={() => setShareModalOpen(false)} className="text-2xl text-gray-400 hover:text-gray-500">
                 &times;
               </button>
             </header>
-            {lodgeRecoredId}
-            <button
-              className="bg-cyan-500 disabled:opacity-50 text-white py-2 px-4 rounded-lg hover:enabled:bg-cyan-600 w-full mb-4"
-              onClick={async () => {}}
-            >
-              Share
-            </button>
+            <p className="text-xs text-blue-600 mb-2">{`${process.env.NEXT_PUBLIC_APP_URL}/lodges/${lodgeRecoredId}`}</p>
+            <label className="text-xs block text-red-700">
+              * Data is sent to recipient DWN, please share the above URL to recipient.
+            </label>
           </div>
         </div>
       )}
