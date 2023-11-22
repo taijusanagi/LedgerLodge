@@ -73,14 +73,14 @@ const Game: React.FC<GameProps> = ({ lodge }) => {
       height: 1080,
       scene: {
         preload() {
-          this.load.audio("Aldous Ichnite - Elevator to Nowhere", "sounds/Aldous Ichnite - Elevator to Nowhere.mp3");
-          this.load.image("Room estructure", "images/Room estructure.png");
-          this.load.image(objects.chair.name, `images/${objects.chair.name}.png`);
-          this.load.image(objects.desk.name, `images/${objects.desk.name}.png`);
-          this.load.image(objects.lamp.name, `images/${objects.lamp.name}.png`);
-          this.load.image(objects.closet.name, `images/${objects.closet.name}.png`);
-          this.load.image(objects.mirror.name, `images/${objects.mirror.name}.png`);
-          this.load.image(objects.bed.name, `images/${objects.bed.name}.png`);
+          this.load.audio("Aldous Ichnite - Elevator to Nowhere", "/sounds/Aldous Ichnite - Elevator to Nowhere.mp3");
+          this.load.image("Room estructure", "/images/Room estructure.png");
+          this.load.image(objects.chair.name, `/images/${objects.chair.name}.png`);
+          this.load.image(objects.desk.name, `/images/${objects.desk.name}.png`);
+          this.load.image(objects.lamp.name, `/images/${objects.lamp.name}.png`);
+          this.load.image(objects.closet.name, `/images/${objects.closet.name}.png`);
+          this.load.image(objects.mirror.name, `/images/${objects.mirror.name}.png`);
+          this.load.image(objects.bed.name, `/images/${objects.bed.name}.png`);
         },
         create() {
           const newMusic = this.sound.add("Aldous Ichnite - Elevator to Nowhere", { loop: true, volume: 0.5 });

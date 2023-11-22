@@ -1,0 +1,18 @@
+{
+  "protocol": "https://ledgerlodge.vercel.app/protocol.json",
+  "published": true,
+  "types": {
+    "doc": {
+      "schema": "doc",
+      "dataFormats": ["application/json"]
+    }
+  },
+  "structure": {
+    "doc": {
+      "$actions": [
+        { "who": "anyone", "can": "write" },
+        { "who": "anyone", "can": "read" }
+      ]
+    }
+  }
+}
