@@ -110,7 +110,7 @@ export default function Home() {
       <header className={`w-full bg-gray-800 text-white p-4 mb-8`}>LedgerLodge</header>
       <div className="mb-8">
         <h2 className="text-lg font-bold mb-4 text-gray-800 text-center">Verifiable Credentials Lodge</h2>
-        <Game lodge={lodge} setLodge={setLodge} />
+        <Game lodge={lodge} setLodge={setLodge} mode="edit" />
       </div>
       <div className="flex justify-center mb-8">
         <div id="formSection" className="w-full max-w-md">

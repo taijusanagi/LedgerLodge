@@ -5,34 +5,50 @@ import { Lodge } from "@/types";
 import { objects } from "@/lib/objects";
 
 interface GameProps {
+  mode: "edit" | "view";
   lodge: Lodge;
   setLodge: any;
+  setSelectedCredential?: any;
 }
 
-const Game: React.FC<GameProps> = ({ lodge, setLodge }) => {
+const Game: React.FC<GameProps> = ({ mode, lodge, setLodge, setSelectedCredential }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
   const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
-  // const [sprites, setSprites] = useState(new Map());
+  const [sprites, setSprites] = useState(new Map());
 
   useEffect(() => {
     if (!game) {
       return;
     }
     console.log("Game.lodge", lodge);
-    Object.entries(lodge).map(([k, v], i) => {
-      const _objects = objects as any;
-      const obj = _objects[k];
-      const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
-      sprite.on("pointerdown", () => {
+    const _objects = objects as any;
+    const newSprites = new Map();
+    sprites.forEach((sprite) => {
+      if (sprite.active) {
         sprite.destroy();
-        setLodge((prev: any) => {
-          delete prev[k];
-          return { ...prev };
-        });
-      });
+      }
     });
-  }, [game, lodge]);
+    Object.entries(lodge)
+      .sort(([k1], [k2]) => _objects[k1].sort - _objects[k2].sort)
+      .map(([k, v], i) => {
+        const obj = _objects[k];
+        const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
+        if (mode == "edit") {
+          sprite.on("pointerdown", () => {
+            sprite.destroy();
+            setLodge((prev: any) => {
+              delete prev[k];
+              return { ...prev };
+            });
+          });
+          newSprites.set(k, sprite);
+        } else {
+          setSelectedCredential(v);
+        }
+      });
+    setSprites(newSprites);
+  }, [mode, game, lodge, setLodge]);
 
   useEffect(() => {
     const game = new Phaser.Game({
@@ -54,8 +70,8 @@ const Game: React.FC<GameProps> = ({ lodge, setLodge }) => {
         create() {
           const newMusic = this.sound.add("Aldous Ichnite - Elevator to Nowhere", { loop: true, volume: 0.5 });
           setMusic(newMusic);
-          // newMusic.play();
-          // setIsMusicPlaying(true);
+          newMusic.play();
+          setIsMusicPlaying(true);
           this.add.image(540, 540, "Room estructure");
           // const newSprites = new Map();
           // Object.entries(objects).forEach(([key, obj]) => {

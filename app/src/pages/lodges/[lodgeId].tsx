@@ -21,6 +21,7 @@ export default function Home() {
   const [did, setDid] = useState("");
   const [lodgeRecordId, setLodgeRecordId] = useState("");
 
+  const [selectedCredential, setSelectedCredential] = useState<any>();
   const router = useRouter();
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function Home() {
       <header className={`w-full bg-gray-800 text-white p-4 mb-8`}>LedgerLodge</header>
       <div className="mb-8">
         <h2 className="text-lg font-bold mb-4 text-gray-800 text-center">Verifiable Credentials Lodge</h2>
-        <Game lodge={lodge} />
+        <Game lodge={lodge} setLodge={setLodge} mode="view" />
       </div>
       <div className="flex justify-center mb-8">
         <div id="formSection" className="w-full max-w-md">
@@ -80,6 +81,28 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {selectedCredential && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2">
+          <div className="absolute inset-0 bg-black opacity-50" onClick={() => setSelectedCredential(undefined)}></div>
+          <div className="relative z-10 bg-white py-4 px-6 rounded-xl shadow-lg max-w-xl w-full mx-4">
+            <header className="flex justify-between items-center mb-2">
+              <h2 className="text-sm font-bold text-gray-700">Credential</h2>
+              <button
+                onClick={() => setSelectedCredential(undefined)}
+                className="text-2xl text-gray-400 hover:text-gray-500"
+              >
+                &times;
+              </button>
+            </header>
+            <pre
+              className="p-2 rounded border border-gray-200 bg-gray-50 overflow-x-auto overflow-y-auto max-h-80 mb-4"
+              style={{ fontSize: "10px" }}
+            >
+              {JSON.stringify(selectedCredential, null, "\t")}
+            </pre>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
