@@ -110,7 +110,7 @@ export default function Home() {
       <header className={`w-full bg-gray-800 text-white p-4 mb-8`}>LedgerLodge</header>
       <div className="mb-8">
         <h2 className="text-lg font-bold mb-4 text-gray-800 text-center">Verifiable Credentials Lodge</h2>
-        <Game lodge={lodge} />
+        <Game lodge={lodge} setLodge={setLodge} />
       </div>
       <div className="flex justify-center mb-8">
         <div id="formSection" className="w-full max-w-md">
@@ -250,8 +250,18 @@ export default function Home() {
             </pre>
             <label className="text-sm block text-gray-700 mb-4">Select Lodge Furniture</label>
             <div className="grid grid-cols-6 gap-4">
-              {Object.values(objects).map((v, i) => (
-                <div key={i} className="overflow-hidden rounded-lg" onClick={() => setCredentialModalOpen(false)}>
+              {Object.entries(objects).map(([k, v], i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden rounded-lg"
+                  onClick={() => {
+                    console.log(k);
+                    setLodge((prev) => {
+                      return { ...prev, [k]: credentials[selecrtedCredentialIndex] };
+                    });
+                    setCredentialModalOpen(false);
+                  }}
+                >
                   <img
                     src={`/images/${v.name}.png`}
                     alt={`image-${i}`}

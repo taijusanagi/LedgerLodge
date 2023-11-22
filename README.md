@@ -6,6 +6,22 @@ TBD
 
 https://ledgerlodge.vercel.app/
 
+## Video Demo
+
+TBD
+
+## Pitch Deck
+
+TBD
+
+## Description
+
+TBD
+
+## How it works
+
+TBD
+
 ## Assets
 
 ### Images

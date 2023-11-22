@@ -6,9 +6,10 @@ import { objects } from "@/lib/objects";
 
 interface GameProps {
   lodge: Lodge;
+  setLodge: any;
 }
 
-const Game: React.FC<GameProps> = ({ lodge }) => {
+const Game: React.FC<GameProps> = ({ lodge, setLodge }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [game, setGame] = useState<Phaser.Game>();
   const [music, setMusic] = useState<Phaser.Sound.BaseSound>();
@@ -19,6 +20,18 @@ const Game: React.FC<GameProps> = ({ lodge }) => {
       return;
     }
     console.log("Game.lodge", lodge);
+    Object.entries(lodge).map(([k, v], i) => {
+      const _objects = objects as any;
+      const obj = _objects[k];
+      const sprite = game.scene.scenes[0].add.sprite(obj.x, obj.y, obj.name).setScale(obj.scale).setInteractive();
+      sprite.on("pointerdown", () => {
+        sprite.destroy();
+        setLodge((prev: any) => {
+          delete prev[k];
+          return { ...prev };
+        });
+      });
+    });
   }, [game, lodge]);
 
   useEffect(() => {
