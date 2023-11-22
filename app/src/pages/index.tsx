@@ -45,6 +45,7 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       const { web5, did } = await Web5.connect();
+      // web5.dwn.protocols.query({});
       setDid(did);
       setWeb5(web5);
       console.log(did);
@@ -80,19 +81,22 @@ export default function Home() {
       const { protocols, status: protocolStatus } = await web5.dwn.protocols.query({
         message: {
           filter: {
-            protocol: "https://ledgerlodge.vercel.app/protocol.json",
+            protocol: protocol.protocol,
           },
         },
       });
 
-      if (protocolStatus.code !== 200 || protocols.length === 0) {
-        const response = await web5.dwn.protocols.configure({
-          message: {
-            definition: protocol,
-          },
-        });
-        console.log("Configure protocol status", response);
-      }
+      console.log("protocolStatus", protocolStatus);
+      // if (protocolStatus.code !== 200 || protocols.length === 0) {
+      const response = await web5.dwn.protocols.configure({
+        message: {
+          definition: protocol,
+        },
+      });
+      console.log("Configure protocol status", response);
+      const test = await response.protocol?.send(did);
+      console.log("test", test);
+      // }
     })();
   }, []);
 
@@ -161,19 +165,22 @@ export default function Home() {
                     const recipientDid =
                       "did:ion:EiAgEI3XNyBtfKM38-6dVeXDD-TAVCZwRQfg19u5NLTVDg:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJkd24tc2lnIiwicHVibGljS2V5SndrIjp7ImNydiI6IkVkMjU1MTkiLCJrdHkiOiJPS1AiLCJ4IjoiMlQ0LUJybmJaMnNjZWw4ZWxLcHN4NnZVSEZlcDM1RXNlSWpTWC1DSW5YWSJ9LCJwdXJwb3NlcyI6WyJhdXRoZW50aWNhdGlvbiJdLCJ0eXBlIjoiSnNvbldlYktleTIwMjAifSx7ImlkIjoiZHduLWVuYyIsInB1YmxpY0tleUp3ayI6eyJjcnYiOiJzZWNwMjU2azEiLCJrdHkiOiJFQyIsIngiOiJrSUdtNnYwX2RHMmpYQTdJYTc2WHNYOGUtU0xWQ3loUnZiQ3p3TWRfRlZRIiwieSI6IklzeHJJQmV6cUs4SkpiODE5VVNPdEo5SEZMdkFUQkNLS1BMMVRJSnNNWVEifSwicHVycG9zZXMiOlsia2V5QWdyZWVtZW50Il0sInR5cGUiOiJKc29uV2ViS2V5MjAyMCJ9XSwic2VydmljZXMiOlt7ImlkIjoiZHduIiwic2VydmljZUVuZHBvaW50Ijp7ImVuY3J5cHRpb25LZXlzIjpbIiNkd24tZW5jIl0sIm5vZGVzIjpbImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNSIsImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduMCJdLCJzaWduaW5nS2V5cyI6WyIjZHduLXNpZyJdfSwidHlwZSI6IkRlY2VudHJhbGl6ZWRXZWJOb2RlIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlBb0M0M3kyX2JnclhZSi1EY2tKejlPbkVPVnN3MzBJSkkzTHRPV2hyYmZqdyJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpQ0RIZkwyVlduYUVDVC1fSTBzb196dXZIX0hIb3h6di1vX09adkZRLWZtUFEiLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUNJTHA3Yy1xWkhZbDBGN3VSNEJjSTNSX0RmMUgxeHk4S0hXb2hsR3NDdHZ3In19";
                     // web5.dwn.protocols.
-                    const { record } = await web5.dwn.records.create({
-                      data: { shared: "shared" },
-                      store: false,
+                    const { record } = await web5.dwn.records.write({
+                      data: { doc: { ok: "ok" } },
+                      store: true,
                       message: {
-                        protocol: "https://ledgerlodge.vercel.app/protocol.json",
+                        protocol: protocol.protocol,
                         protocolPath: "doc",
                         schema: "doc",
                         // recipient: recipientDid,
                         // dataFormat: "application/json",
-                        recipient: recipientDid,
+
+                        // recipient: recipientDid,
                         // published: true,
                       },
                     });
+                    console.log("record", record);
+                    console.log("recipientDid", recipientDid);
                     const test = await record?.send(recipientDid);
                     console.log("test", test);
                     console.log("record.id", record!.id);

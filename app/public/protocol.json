@@ -1,5 +1,5 @@
 {
-  "protocol": "https://ledgerlodge.vercel.app/protocol.json",
+  "protocol": "http://localhost:3000",
   "published": true,
   "types": {
     "doc": {
@@ -10,8 +10,14 @@
   "structure": {
     "doc": {
       "$actions": [
-        { "who": "anyone", "can": "write" },
-        { "who": "anyone", "can": "read" }
+        {
+          "who": "anyone",
+          "can": "write"
+        },
+        {
+          "who": "anyone",
+          "can": "read"
+        }
       ]
     }
   }

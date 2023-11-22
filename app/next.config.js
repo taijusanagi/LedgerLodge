@@ -2,7 +2,7 @@ const webpack = require("webpack");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // reactStrictMode: true,
 
   webpack: (config, { isServer }) => {
     if (!isServer) {
