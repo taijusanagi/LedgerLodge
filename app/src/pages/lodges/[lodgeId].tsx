@@ -74,7 +74,7 @@ export default function Home() {
         <div id="formSection" className="w-full max-w-md">
           <div className="centered-form bg-white p-4 rounded-lg shadow-md space-y-8">
             <div>
-              <label className="text-sm block text-gray-700 mb-2">Creator DID</label>{" "}
+              <label className="text-sm block text-gray-700 mb-2">Creator DID</label>
               <p className="text-xs text-gray-70 text-gray-500">{truncateString(did, 30)}</p>
             </div>
             <div>
