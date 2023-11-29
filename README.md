@@ -18,7 +18,7 @@ https://docs.google.com/presentation/d/19MlljzXwNkPih7dosxq12tJUqfaCbQk1zKXDeI9N
 
 ## Description
 
-LedgerLodge revolutionizes the experience of credential sharing with a unique blend of gamification and security. By harnessing the power of TBD's decentralized identity SDK, it seamlessly manages verifiable credentials within a user-friendly, virtual environment. Users can securely store their credentials on local Decentralized Web Nodes (DWN), crafting personalized public rooms adorned with virtual furniture to display these credentials. This innovative platform facilitates effortless sharing of public credentials between users via DWN, merging reliability with interactive engagement.
+LedgerLodge is new experience of credential sharing with gamification. By TBD's decentralized identity SDK, users can securely store their credentials on local Decentralized Web Nodes (DWN), crafting personalized public rooms with virtual furniture to display these credential between users via DWN.
 
 ## How it works
 
